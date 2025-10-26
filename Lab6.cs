@@ -11,6 +11,7 @@ namespace Lab6
             Console.WriteLine("ЛАБОРАТОРНАЯ РАБОТА №6 — МАССИВЫ");
             Console.WriteLine("1 — Подсчёт гласных и согласных (Упр. 6.1)");
             Console.WriteLine("2 — Умножение матриц (Упр. 6.2)");
+            Console.WriteLine("3 — Средняя температура по месяцам (Упр. 6.3)");
             Console.Write("\nВведите номер задания: ");
 
             int choice = int.Parse(Console.ReadLine() ?? "0");
@@ -18,6 +19,7 @@ namespace Lab6
             {
                 case 1: Ex6_1(args); break;
                 case 2: Ex6_2(); break;
+                case 3: Ex6_3(); break;
                 default: Console.WriteLine("Неверный выбор."); break;
             }
         }
@@ -120,6 +122,51 @@ namespace Lab6
                         result[i, j] += A[i, k] * B[k, j];
 
             return result;
+        }
+        
+        // УПРАЖНЕНИЕ 6.3 — Средняя температура по месяцам
+        
+        static void Ex6_3()
+        {
+            Console.WriteLine("\nУПРАЖНЕНИЕ 6.3 — Средняя температура за год\n");
+
+            Random rnd = new Random();
+            const int months = 12;
+            const int days = 30;
+
+            double[,] temperature = new double[months, days];
+
+            for (int i = 0; i < months; i++)
+                for (int j = 0; j < days; j++)
+                    temperature[i, j] = Math.Round(rnd.NextDouble() * 40 - 10, 1);
+
+            double[] averages = CalcAverageTemperatures(temperature);
+
+            Console.WriteLine("Средние температуры по месяцам:");
+            for (int i = 0; i < months; i++)
+                Console.WriteLine($"Месяц {i + 1}: {averages[i]:F1}°C");
+
+            Array.Sort(averages);
+            Console.WriteLine("\nОтсортированные средние температуры:");
+            foreach (double t in averages)
+                Console.WriteLine($"{t:F1}°C");
+        }
+
+        static double[] CalcAverageTemperatures(double[,] temperature)
+        {
+            int months = temperature.GetLength(0);
+            int days = temperature.GetLength(1);
+            double[] averages = new double[months];
+
+            for (int i = 0; i < months; i++)
+            {
+                double sum = 0;
+                for (int j = 0; j < days; j++)
+                    sum += temperature[i, j];
+                averages[i] = sum / days;
+            }
+
+            return averages;
         }
     }
 }
